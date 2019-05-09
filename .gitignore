@@ -1,0 +1,5 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gradle/4.6/javaCompile/
+app/libs/
+build/
+/.idea/
