@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_device_info"
+    android:layout_width="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="7dp"
+    android:maxEms="14"
+    android:paddingRight="8dp"
+    android:paddingLeft="8dp"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:singleLine="true"
+    android:textColor="#3D5699"
+    android:textSize="13dp"
+    tools:text="#哈什哈什么哈哈什么哈哈什么哈哈什么哈哈什么哈么哈">
+
+</TextView>
+
+
