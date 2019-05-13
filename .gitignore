@@ -2,4 +2,5 @@
 .gradle/4.6/javaCompile/
 app/libs/
 build/
-/.idea/
+.idea/
+.gradle/

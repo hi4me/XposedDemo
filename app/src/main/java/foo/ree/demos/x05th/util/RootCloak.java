@@ -55,9 +55,11 @@ public class RootCloak implements IXposedHookLoadPackage {
 	/*	if (debugPref) {
 			XposedBridge.log("Found app: " + lpparam.packageName);
 		}*/
+//        Log.d("chao","加载应用程式1：" + lpparam.packageName);
         if (!(appSet.contains(lpparam.packageName))) { // 如果应用程序不匹配，请勿钩住任何东西，只需返回。
             return;
         }
+//        Log.d("chao","加载应用程式2：" + lpparam.packageName);
 
 
         if (debugPref) {
@@ -121,12 +123,59 @@ public class RootCloak implements IXposedHookLoadPackage {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 String classname = (String) param.args[0];
 
-                if (classname != null && (classname.equals("de.robv.android.xposed.XposedBridge") || classname.equals("de.robv.android.xposed.XC_MethodReplacement"))) {
+                if (classname != null && (classname.equals("de.robv.android.xposed.XposedBridge")
+                        || classname.equals("de.robv.android.xposed.XC_MethodReplacement")|| classname.startsWith("de.robv.android.xposed"))) {
                     param.setThrowable(new ClassNotFoundException());
                     if (debugPref) {
                         XposedBridge.log("找到并隐藏Xposed类名称：" + classname);
                     }
                 }
+            }
+        });
+        findAndHookMethod("java.lang.ClassLoader", lpparam.classLoader, "loadClass", String.class, boolean.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                String classname = (String) param.args[0];
+
+                if (classname != null && (classname.equals("de.robv.android.xposed.XposedBridge")
+                        || classname.equals("de.robv.android.xposed.XC_MethodReplacement") || classname.startsWith("de.robv.android.xposed"))
+                ) {
+                    param.setThrowable(new ClassNotFoundException());
+                    if (debugPref) {
+                        XposedBridge.log("找到并隐藏Xposed类名称：" + classname);
+                    }
+                }
+                Log.d("chao", "ClassLoader:" + classname);
+            }
+        });
+        Log.d("chao","Throwable1:");
+        findAndHookMethod("java.lang.Throwable", lpparam.classLoader, "getStackTrace", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Log.d("chao","Throwable1:"+("com.dev.syiong".equals("de.robv.android.xposed.XposedBridge")));
+                StackTraceElement[] stackTraceElements = (StackTraceElement[]) param.getResult(); // Get the results from the method call
+
+                List<StackTraceElement> stackTraceElementArrayList = Arrays.asList(stackTraceElements);
+                List<StackTraceElement> resultList = new ArrayList<>();
+                Iterator<StackTraceElement> iter = stackTraceElementArrayList.iterator();
+                while (iter.hasNext()) {
+                    StackTraceElement stackTraceElement = iter.next();
+                    if(stackTraceElement!=null&&!TextUtils.isEmpty(stackTraceElement.getClassName())&&stackTraceElement.getClassName().startsWith("de.robv.android.xposed")) {
+                        Log.d("chao","Throwable2:"+(stackTraceElement!=null||!TextUtils.isEmpty(stackTraceElement.getClassName())&&stackTraceElement.getClassName().equals("de.robv.android.xposed.XposedBridge")));
+
+
+
+                    }else {
+                        resultList.add(stackTraceElement);
+                    }
+
+
+                }
+                StackTraceElement[] resultarray = new StackTraceElement[resultList.size()];
+                resultList.toArray(resultarray);
+                Log.d("chao","Trhorwable4"+resultarray);
+                param.setResult(resultarray); // 将返回值设置为干净列表
+
             }
         });
     }
@@ -640,7 +689,7 @@ public class RootCloak implements IXposedHookLoadPackage {
         	keywordSet.isEmpty();
             commandSet.isEmpty();
             libnameSet.isEmpty();
-
+            Log.d("chao","加载应用程式3：" );
         	listApp = SharedPref.getXValue("HideRootPackge");//隐藏root的包名字符串
         	if(!TextUtils.isEmpty(listApp)){
         		appSet = new HashSet<String>(getAppset(listApp));//rootpackage的包名set集合
@@ -649,6 +698,7 @@ public class RootCloak implements IXposedHookLoadPackage {
 
 
 			}
+//            Log.d("chao","加载应用程式4：" +appSet);
             if (keywordSet.isEmpty()) {
                 keywordSet = Common.DEFAULT_KEYWORD_SET;//默认的关键词集合
             }
@@ -658,7 +708,9 @@ public class RootCloak implements IXposedHookLoadPackage {
             if (libnameSet.isEmpty()) {
                 libnameSet = Common.DEFAULT_LIBNAME_SET;//默认的lib包集合
             }
+//            Log.d("chao","加载应用程式6：" );
         }catch (Exception e) {
+//            Log.d("chao","加载应用程式7：" + e);
             e.printStackTrace();
         } finally {
             StrictMode.setThreadPolicy(old);

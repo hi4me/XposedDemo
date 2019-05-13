@@ -39,7 +39,8 @@ import foo.ree.demos.x05th.util.SharedPref;
 
 public class MainActivity extends AppCompatActivity {
     private DeviceInfoListView mDeivceInfoView;
-
+    private static final String XPOSED_HELPERS = "de.robv.android.xposed.XposedHelpers";
+    private static final String XPOSED_BRIDGE = "de.robv.android.xposed.XposedBridge";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,66 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("chao","onCreate:"+SharedPref.getXValue("serial"));
 //         Log.d("chao","onCreate:"+SharedPref.getXValue("getBaseband"));
         Log.d("chao", "onCreate:" + Process.myPid());
+//        isXposedExistByThrow();
+//
+//
+//        try {
+//            ClassLoader.getSystemClassLoader().loadClass("de.robv.android.xposed.XposedBridge");
+//        } catch (ClassNotFoundException e) {
+//            Log.d("chao", "getSystemClassLoader:" + e);
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            Class.forName("de.robv.android.xposed.XposedBridge");
+//        } catch (ClassNotFoundException e) {
+//            Log.d("chao", "froname:" + e);
+//            e.printStackTrace();
+//        }
+//        tryShutdownXposed();
+    }
+
+    public boolean tryShutdownXposed() {
+        Field xpdisabledHooks = null;
+        try {
+            xpdisabledHooks = ClassLoader.getSystemClassLoader()
+                    .loadClass(XPOSED_BRIDGE)
+                    .getDeclaredField("disableHooks");
+            xpdisabledHooks.setAccessible(true);
+            xpdisabledHooks.set(null, Boolean.TRUE);
+            Log.d("chao","tryShutdownXposed0:");
+            return true;
+        } catch (NoSuchFieldException e) {
+            Log.d("chao","tryShutdownXposed1:"+e);
+            e.printStackTrace();
+            return false;
+        } catch (ClassNotFoundException e) {
+            Log.d("chao","tryShutdownXposed2:"+e);
+            e.printStackTrace();
+            return false;
+        } catch (IllegalAccessException e) {
+            Log.d("chao","tryShutdownXposed3:"+e);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    /**
+     * 通过主动抛出异常，检查堆栈信息来判断是否存在XP框架
+     *
+     * @return
+     */
+    public boolean isXposedExistByThrow() {
+        try {
+            throw new Exception("gg");
+        } catch (Exception e) {
+            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                Log.d("chao","isXposedExistByThrow:"+stackTraceElement.getClassName());
+                if (stackTraceElement.getClassName().contains(XPOSED_BRIDGE)) return true;
+            }
+            return false;
+        }
     }
 
     @NonNull
