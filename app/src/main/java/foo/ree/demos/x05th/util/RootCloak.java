@@ -233,7 +233,10 @@ public class RootCloak implements IXposedHookLoadPackage {
 
     /**
      * 处理与PackageManager相关的所有挂钩。
+     *
+     * TODO模拟正常用户的APP列表 其中随机的增加和删除一些常用APP
      */
+    //TODO 模拟正常用户的APP列表 其中随机的增加和删除一些常用APP
     private void initPackageManager(final LoadPackageParam lpparam) {
         /**
          钩子在PackageManager中获取安装应用程序。

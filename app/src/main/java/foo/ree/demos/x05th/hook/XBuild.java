@@ -25,6 +25,7 @@ public class XBuild {
         AndroidSerial(sharePkgParam);
         BaseBand(sharePkgParam);
         BuildProp(sharePkgParam);
+        systemProperties(sharePkgParam);
     }
 
 
@@ -104,6 +105,17 @@ public class XBuild {
         }
 
 
+    }
+
+    public void systemProperties(XC_LoadPackage.LoadPackageParam loadPkgParam) {
+        XposedHelpers.findAndHookMethod("android.os.SystemProperties",loadPkgParam.classLoader, "native_get", new Object[] {String.class,String.class,
+                new XC_MethodHook() {
+                    //为了防止某些APP跳过Build类 而直接使用SystemProperties.native_get获得参数
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                    }
+                }});
     }
 
 
