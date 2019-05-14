@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         deviceInfo.add("设备引导程序booltloader:"+Build.BOOTLOADER); //主板引导程序
         deviceInfo.add("设备主机地址host:"+Build.HOST); //设备主机地址
         deviceInfo.add("设备版本标签build_tags:"+Build.TAGS); //描述标签
-        deviceInfo.add("设备版本类型serial:"+Build.TYPE); //设备版本类型
+        deviceInfo.add("设备版本类型build_type:"+Build.TYPE); //设备版本类型
         deviceInfo.add("源码控制版本号incremental:"+Build.VERSION.INCREMENTAL); //源码控制版本号
         deviceInfo.add("Andorid系统版本:"+Build.VERSION.RELEASE); //
         deviceInfo.add("Android系统api版本:"+Build.VERSION.SDK_INT);
@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
             deviceInfo.add("屏幕xdpi:"+displayMetrics.xdpi);
             deviceInfo.add("屏幕ydpi:"+displayMetrics.ydpi);
             deviceInfo.add("屏幕scalDensity:"+displayMetrics.scaledDensity);
+
 
 
         }

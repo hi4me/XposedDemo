@@ -12,7 +12,11 @@ public class SharedPref {
 
     public SharedPref(Context appContext) {
         shareContext = appContext;
-        mySharedPref = shareContext.getSharedPreferences(Common.PREFS_FILE, Context.MODE_WORLD_READABLE);
+        try {
+            mySharedPref = shareContext.getSharedPreferences(Common.PREFS_FILE, Context.MODE_WORLD_READABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setSharedPref(String key, String value) {
